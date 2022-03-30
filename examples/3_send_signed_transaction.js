@@ -1,34 +1,46 @@
-const { ethers } = require("ethers");
+const {ethers}=require('ethers');
 
-const INFURA_ID = ''
-const provider = new ethers.providers.JsonRpcProvider(`https://kovan.infura.io/v3/${INFURA_ID}`)
+const INFURA_ID = '45214a00d4ea4a08b9ddd331f0fd39d6'
+const provider = new ethers.providers.JsonRpcProvider(`https://kovan.infura.io/v3/${INFURA_ID}`);
 
-const account1 = '' // Your account address 1
-const account2 = '' // Your account address 2
+const account1='0xa0Ad113001635d6129F537567FFb3adf02f01cBD';//sender
 
-const privateKey1 = '' // Private key of account 1
-const wallet = new ethers.Wallet(privateKey1, provider)
+const privateKey1='355c86bdd8755911824162acffae227dd2a0f8cecc24e3f7cfffecb33c8af53e';
 
-const main = async () => {
-    const senderBalanceBefore = await provider.getBalance(account1)
-    const recieverBalanceBefore = await provider.getBalance(account2)
+const account2='0xEDA2719E4B00f3A1f575A8cfF606cF14deC82bBF';//recipient
 
-    console.log(`\nSender balance before: ${ethers.utils.formatEther(senderBalanceBefore)}`)
-    console.log(`reciever balance before: ${ethers.utils.formatEther(recieverBalanceBefore)}\n`)
+const wallet=new ethers.Wallet(privateKey1,provider);
 
-    const tx = await wallet.sendTransaction({
-        to: account2,
-        value: ethers.utils.parseEther("0.025")
-    })
+const main=async()=>{
+      //Show account 1 balance before transfer
+      //Show account 2 balance before transfer
 
-    await tx.wait()
-    console.log(tx)
+      const balance1=await provider.getBalance(account1);
+       console.log(`\nETH Balance of ${account1} --> ${ethers.utils.formatEther(balance1)} ETH\n`);
 
-    const senderBalanceAfter = await provider.getBalance(account1)
-    const recieverBalanceAfter = await provider.getBalance(account2)
+       const balance2=await provider.getBalance(account2);
+       console.log(`\nETH Balance of ${account2} --> ${ethers.utils.formatEther(balance2)} ETH\n`);
 
-    console.log(`\nSender balance after: ${ethers.utils.formatEther(senderBalanceAfter)}`)
-    console.log(`reciever balance after: ${ethers.utils.formatEther(recieverBalanceAfter)}\n`)
+      //Send Ether
+       const tx=await wallet.sendTransaction(
+           {
+               to:account2,
+               value:ethers.utils.parseEther("0.0001")
+            })
+
+      // wait for transaction to be mined
+      await tx.wait();
+
+
+
+      console.log(tx);
+
+      const balance3=await provider.getBalance(account1);
+       console.log(`\nETH Balance of ${account1} --> ${ethers.utils.formatEther(balance3)} ETH\n`);
+
+       const balance4=await provider.getBalance(account2);
+       console.log(`\nETH Balance of ${account2} --> ${ethers.utils.formatEther(balance4)} ETH\n`);
+
 }
 
 main()
